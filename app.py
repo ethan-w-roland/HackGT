@@ -30,7 +30,7 @@ def redirect():
     elif intent == "GetSpeech": #aka get speech transcript
         Transcript = req["queryResult"]["parameters"]["Transcript"]
         print(Transcript)
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return "Analysing" #{'fulfillmentText': 'This is a response from webhook.'}
 
     elif intent == "GetInterviewType":  #aka set interview type question
         helpVariable = req["queryResult"]["parameters"]["HelpCategory"]

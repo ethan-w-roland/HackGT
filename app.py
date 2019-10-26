@@ -61,7 +61,7 @@ def redirect():
 
 def HandleDetectIntent(HelpVariable: str):
     if HelpVariable == "speech":
-        return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}-
+        return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}
     elif HelpVariable == 'interview':
         return {"followupEventInput" : {"name" : "GetInterviewTypeEvent"}}
     else:

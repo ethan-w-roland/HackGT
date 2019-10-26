@@ -56,13 +56,13 @@ def HandleDetectIntent(HelpVariable:  str):
 
 
 def HandleQuestionType(HelpVariable:  str):
-    if HelpVariable == "General":
+    if HelpVariable == "general":
         #fetch random interview topic
         lines = open('./interview/questions.txt').read().splitlines()
         intTopic = random.choice(lines).strip()
         print('Randomly picked interview topic is: ', intTopic)
         return {'fulfillmentText': intTopic}
-    elif HelpVariable == "Computer Science":
+    elif HelpVariable == "computer":
         #fetch random interview topic
         lines = open('./interview/csbasicquestions.txt').read().splitlines()
         intTopic = random.choice(lines).strip()

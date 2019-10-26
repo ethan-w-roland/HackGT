@@ -1,21 +1,44 @@
+#---BEGIN INITIALIZATION---
 from flask import Flask, request, make_response, jsonify
+import nlp
 import random
 
 #set environmental variable for google auth
 import os
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
 
+# Import Google Cloud client library
+from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
+client = language.LanguageServiceClient() # Instantiates a client
+
+#---BEGIN APP---
+
 # initialize the flask app
 app = Flask(__name__)
 SpeechTopic = None
+
+# run the app
+if __name__ == '__main__':
+   app.run()
+
 # default route
 @app.route('/')
 def index():
     return 'Hello World!'
 
-# function for responses
+# create a route for webhook
+@app.route('/webhook', methods= ['POST'])
+def webhook():
+    return make_response(jsonify(redirect()))
+
+#---WEBHOOK HANDLERS---
+
+# function for responses - branches based on intent
 def redirect():
-    # build a request object
+    
+    # req represents submitted data
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
 
@@ -29,12 +52,11 @@ def redirect():
 
     elif intent == "GetSpeech": #aka get speech transcript
         Transcript = req["queryResult"]["parameters"]["Transcript"]
-        print(Transcript)
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return AnalyzeSpeech(Transcript)
     else:
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return {'fulfillmentText': 'No supported intent detected'}
 
-def HandleDetectIntent(HelpVariable:  str):
+def HandleDetectIntent(HelpVariable: str):
     if HelpVariable == "speech":
         return {
             "followupEventInput" : {
@@ -53,12 +75,6 @@ def SetSpeechTopic(speechTopic: str):
     print("Topic was set to: ", SpeechTopic)
     return {'fulfillmentText': 'Great begin your speech.'}
 
-# create a route for webhook
-@app.route('/webhook', methods= ['POST'])
-def webhook():
-    # entry point to our webhook
-    return make_response(jsonify(redirect()))
-
-# run the app
-if __name__ == '__main__':
-   app.run()
+def AnalyzeSpeech(transcript: str):
+    sentiment = nlp.getSentiment(transcript)
+    return {'fulfillmentText': sentiment}

@@ -1,6 +1,10 @@
 from flask import Flask, request, make_response, jsonify
 import random
 
+#set environmental variable for google auth
+import os
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
+
 # initialize the flask app
 app = Flask(__name__)
 SpeechTopic = None

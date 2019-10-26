@@ -40,6 +40,7 @@ def redirect():
      # req represents submitted data
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
+    print(intent)
 
     if intent == "DetectIntent": #aka which sub-app to go to
         helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
@@ -60,6 +61,7 @@ def redirect():
          return {'fulfillmentText': 'No supported intent detected'}
 
 def HandleDetectIntent(HelpVariable: str):
+    print('HelpVariable is: ', HelpVariable)
     if HelpVariable == "speech":
         return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}
     elif HelpVariable == 'interview':
@@ -74,9 +76,11 @@ def SetSpeechTopic(speechTopic: str):
 
 def AnalyzeSpeech(transcript: str):
     sentiment = nlp.getSentiment(transcript)
+    print(transcript, "....", sentiment)
     return {'fulfillmentText': sentiment}
 
 def HandleQuestionType(InterviewType:  str):
+    print("question type is: ", InterviewType)
     if InterviewType == "General":
         #fetch random interview topic
         lines = open('./interview/questions.txt').read().splitlines()

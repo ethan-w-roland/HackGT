@@ -1,0 +1,8 @@
+What is a file?
+What is a class?
+What is an object?
+What is a constructor?
+What is inheritance?
+What is polymorphism?
+What are the instance and class variables?
+Compare method and constructor?

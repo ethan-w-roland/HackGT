@@ -1,53 +1,88 @@
-# app.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, make_response, jsonify
+import random
+
+#set environmental variable for google auth
+import os
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
+
+# initialize the flask app
 app = Flask(__name__)
-
-#asda sdas das d
-
-@app.route('/getmsg/', methods=['GET'])
-def respond():
-    # Retrieve the name from url parameter
-    name = request.args.get("name", None)
-
-    # For debugging
-    print(f"got name {name}")
-
-    response = {}
-
-    # Check if user sent a name at all
-    if not name:
-        response["ERROR"] = "no name found, please send a Jesse name."
-    # Check if the user entered a number not a name
-    elif str(name).isdigit():
-        response["ERROR"] = "name can't be numeric."
-    # Now the user entered a valid name
-    else:
-        response["MESSAGE"] = f"Welcome {name} to our awesome platform!!"
-
-    # Return the response in json format
-    return jsonify(response)
-
-@app.route('/post/', methods=['POST'])
-def post_something():
-    param = request.form.get('name')
-    print(param)
-    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
-    if param:
-        return jsonify({
-            "Message": f"Welcome {name} to our awesome platform!!",
-            # Add this option to distinct the POST request
-            "METHOD" : "POST"
-        })
-    else:
-        return jsonify({
-            "ERROR": "no name found, please send a name."
-        })
-
-# A welcome message to test our server
+SpeechTopic = None
+# default route
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return 'Hello World!'
 
+# function for responses
+def redirect():
+    # build a request object
+    req = request.get_json(force=True)
+    intent = req["queryResult"]["intent"]["displayName"]
+
+    if intent == "DetectIntent": #aka which sub-app to go to
+        helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
+        return HandleDetectIntent(helpVariable)
+
+    elif intent == "GetSpeechTopic":  #aka set speech topic
+        speechTopic = req["queryResult"]["parameters"]["SpeechTopic"]
+        return SetSpeechTopic(speechTopic)
+
+    elif intent == "GetSpeech": #aka get speech transcript
+        Transcript = req["queryResult"]["parameters"]["Transcript"]
+        print(Transcript)
+        return {'fulfillmentText': 'This is a response from webhook.'}
+
+    elif intent == "GetInterviewType":  #aka set interview type question
+        helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
+        return HandleQuestionType(helpVariable)
+    else:
+        return {'fulfillmentText': 'This is a response from webhook.'}
+
+def HandleDetectIntent(HelpVariable:  str):
+    if HelpVariable == "speech":
+        return {
+            "followupEventInput" : {
+                "name" : "AskSpeechTopicEvent"
+            }
+        }
+    elif HelpVariable == 'interview':
+        return {
+            "followupEventInput" : {
+                "name" : "GetInterviewTypeEvent"
+            }
+        }
+    else:
+        return {'fulfillmentText': 'This is a response from webhook.'}
+
+
+def HandleQuestionType(HelpVariable:  str):
+    if HelpVariable == "General":
+        #fetch random interview topic
+        lines = open('./interview/questions.txt').read().splitlines()
+        intTopic = random.choice(lines).strip()
+        print('Randomly picked interview topic is: ', intTopic)
+        return {'fulfillmentText': intTopic}
+    elif HelpVariable == "Computer Science":
+        #fetch random interview topic
+        lines = open('./interview/csbasicquestions.txt').read().splitlines()
+        intTopic = random.choice(lines).strip()
+        print('Randomly picked interview topic is: ', intTopic)
+        return {'fulfillmentText': intTopic}
+    else:
+        return {'fulfillmentText': 'This is a response from webhook.'}
+
+
+def SetSpeechTopic(speechTopic: str):
+    SpeechTopic = speechTopic
+    print("Topic was set to: ", SpeechTopic)
+    return {'fulfillmentText': 'Great begin your speech.'}
+
+# create a route for webhook
+@app.route('/webhook', methods= ['POST'])
+def webhook():
+    # entry point to our webhook
+    return make_response(jsonify(redirect()))
+
+# run the app
 if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+   app.run()

@@ -1,25 +1,43 @@
-#--INITIALIZATION--
+#---INITIALIZATION---
 from flask import Flask, request, make_response, jsonify
 import random
+import nlp
 
 #set environmental variable for google auth
 import os
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
 
-#--BEGIN APPLICATION--
+#Import Google Cloud client library
+from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
+client = language.LanguageServiceClient() # Instantiates a client
+
+#---BEGIN APPLICATION---
 
 # initialize the flask app
 app = Flask(__name__)
 SpeechTopic = None
 
+# run the app
+if __name__ == '__main__':
+   app.run(threaded=True, port=5000)
+
 # default route
 @app.route('/')
 def index():
-    return 'Hello World!'
+    return "Bemo Assistant Root Directory"
 
-# function for responses
+# webhook route
+@app.route('/webhook', methods= ['POST'])
+def webhook():
+    return make_response(jsonify(redirect()))
+
+#---WEBHOOK HANDLERS---
+
+# function for responses - branches based on intent
 def redirect():
-    # build a request object
+     # req represents submitted data
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
 
@@ -33,40 +51,39 @@ def redirect():
 
     elif intent == "GetSpeech": #aka get speech transcript
         Transcript = req["queryResult"]["parameters"]["Transcript"]
-        print(Transcript)
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return AnalyzeSpeech(Transcript)
 
     elif intent == "GetInterviewType":  #aka set interview type question
-        helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
-        return HandleQuestionType(helpVariable)
+        InterviewType = req["queryResult"]["parameters"]["HelpCategory"]
+        return HandleQuestionType(InterviewType)
     else:
-        return {'fulfillmentText': 'This is a response from webhook.'}
+         return {'fulfillmentText': 'No supported intent detected'}
 
-def HandleDetectIntent(HelpVariable:  str):
+def HandleDetectIntent(HelpVariable: str):
     if HelpVariable == "speech":
-        return {
-            "followupEventInput" : {
-                "name" : "AskSpeechTopicEvent"
-            }
-        }
+        return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}-
     elif HelpVariable == 'interview':
-        return {
-            "followupEventInput" : {
-                "name" : "GetInterviewTypeEvent"
-            }
-        }
+        return {"followupEventInput" : {"name" : "GetInterviewTypeEvent"}}
     else:
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return {'fulfillmentText': 'Invalid Selection'}
 
+def SetSpeechTopic(speechTopic: str):
+    SpeechTopic = speechTopic
+    print("Topic was set to: ", SpeechTopic)
+    return {'fulfillmentText': 'Great, begin your speech.'}
 
-def HandleQuestionType(HelpVariable:  str):
-    if HelpVariable == "General":
+def AnalyzeSpeech(transcript: str):
+    sentiment = nlp.getSentiment(transcript)
+    return {'fulfillmentText': sentiment}
+
+def HandleQuestionType(InterviewType:  str):
+    if InterviewType == "General":
         #fetch random interview topic
         lines = open('./interview/questions.txt').read().splitlines()
         intTopic = random.choice(lines).strip()
         print('Randomly picked interview topic is: ', intTopic)
         return {'fulfillmentText': intTopic}
-    elif HelpVariable == "Computer Science":
+    elif InterviewType == "Computer Science":
         #fetch random interview topic
         lines = open('./interview/csbasicquestions.txt').read().splitlines()
         intTopic = random.choice(lines).strip()
@@ -74,19 +91,3 @@ def HandleQuestionType(HelpVariable:  str):
         return {'fulfillmentText': intTopic}
     else:
         return {'fulfillmentText': 'This is a response from webhook.'}
-
-
-def SetSpeechTopic(speechTopic: str):
-    SpeechTopic = speechTopic
-    print("Topic was set to: ", SpeechTopic)
-    return {'fulfillmentText': 'Great begin your speech.'}
-
-# create a route for webhook
-@app.route('/webhook', methods= ['POST'])
-def webhook():
-    # entry point to our webhook
-    return make_response(jsonify(redirect()))
-
-# run the app
-if __name__ == '__main__':
-   app.run()

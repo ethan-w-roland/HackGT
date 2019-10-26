@@ -2,6 +2,8 @@
 from flask import Flask, request, jsonify
 app = Flask(__name__)
 
+#asda sdas das d
+
 @app.route('/getmsg/', methods=['GET'])
 def respond():
     # Retrieve the name from url parameter
@@ -14,7 +16,7 @@ def respond():
 
     # Check if user sent a name at all
     if not name:
-        response["ERROR"] = "no name found, please send a name."
+        response["ERROR"] = "no name found, please send a Jesse name."
     # Check if the user entered a number not a name
     elif str(name).isdigit():
         response["ERROR"] = "name can't be numeric."

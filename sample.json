@@ -1,0 +1,44 @@
+{
+	"responseId": "64548f23-5459-4ab2-a427-0bf4af39688f-d5ae01f3",
+	"queryResult": {
+		"queryText": "i need help with speech",
+		"parameters": {
+			"HelpCategory": "speech"
+		},
+		"allRequiredParamsPresent": true,
+		"fulfillmentMessages": [{
+			"text": {
+				"text": [
+					""
+				]
+			}
+		}],
+		"outputContexts": [{
+				"name": "projects/newagent-orbjfw/agent/sessions/5780b0cf-8b76-ba9d-cbd1-71f18e756855/contexts/defaultwelcomeintent-followup",
+				"lifespanCount": 5,
+				"parameters": {
+					"HelpCategory": "speech",
+					"HelpCategory.original": "speech"
+				}
+			},
+			{
+				"name": "projects/newagent-orbjfw/agent/sessions/5780b0cf-8b76-ba9d-cbd1-71f18e756855/contexts/detectintent-followup",
+				"lifespanCount": 5,
+				"parameters": {
+					"HelpCategory": "speech",
+					"HelpCategory.original": "speech"
+				}
+			}
+		],
+		"intent": {
+			"name": "projects/newagent-orbjfw/agent/intents/4d2833ae-9339-49e6-a495-f4d1214113ad",
+			"displayName": "DetectIntent"
+		},
+		"intentDetectionConfidence": 0.707958,
+		"languageCode": "en"
+	},
+	"originalDetectIntentRequest": {
+		"payload": {}
+	},
+	"session": "projects/newagent-orbjfw/agent/sessions/5780b0cf-8b76-ba9d-cbd1-71f18e756855"
+}

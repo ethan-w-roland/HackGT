@@ -1,3 +1,4 @@
+#--INITIALIZATION--
 from flask import Flask, request, make_response, jsonify
 import random
 
@@ -5,9 +6,12 @@ import random
 import os
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
 
+#--BEGIN APPLICATION--
+
 # initialize the flask app
 app = Flask(__name__)
 SpeechTopic = None
+
 # default route
 @app.route('/')
 def index():

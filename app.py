@@ -78,11 +78,11 @@ def redirect():
         return AnalyzeSpeech(content)
 
     #Interview Sub-App
-    elif intent == "Interview.Type":
+    elif intent == "Interview.Type" or intent == "Anonymous.InterviewType":
         qType = req["queryResult"]["parameters"]["QuestionType"]
         return HandleQuestionType(qType)
     
-    elif intent == "Interview.Transcript":
+    elif intent == "Interview.Transcript" or intent == "Anonymous.InterviewTranscript":
         content = req["queryResult"]["parameters"]["Transcript"]
         return AnalyzeInterview(content)
 

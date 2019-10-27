@@ -1,3 +1,13 @@
+#set environmental variable for google auth
+import os
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"
+
+#Import Google Cloud client library
+from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
+client = language.LanguageServiceClient() # Instantiates a client
+
 def getSentiment(text: str):
     document = types.Document(
         content=transcript,

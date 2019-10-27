@@ -70,7 +70,7 @@ def redirect():
 
     #Speech Sub-App
     if intent == "Speech.Topic":
-        topic = req["queryResult"]["parameters"]["Topic"]
+        topic = req["queryResult"]["parameters"]["SpeechTopic"]
         return SetSpeechTopic(topic)
 
     elif intent == "Speech.Content":

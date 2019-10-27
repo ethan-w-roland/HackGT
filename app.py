@@ -9,9 +9,15 @@ import nlp
 app = Flask(__name__)
 SpeechTopic = None
 
+#Users "database"
+Users = []
+User = {"username": None,
+        "eduLevel": None,
+        "eduFocus": None}
+
 # run the app
 if __name__ == '__main__':
-   app.run(threaded=True, port=5000)
+   app.run(port=5000)
 
 # default route
 @app.route('/')
@@ -51,6 +57,19 @@ def redirect():
         content = req["queryResult"]["parameters"]["Content"]
         return AnalyzeInterview(content)
 
+    #User Creation
+    elif intent == "AccountCreation.Username":
+        username = req["queryResult"]["parameters"]["Username"]
+        return setUsername(username)
+
+    elif intent == "AccountCreation.EduLevel":
+        level = req["queryResult"]["parameters"]["Level"]
+        return setEduLevel(level)
+
+    elif intent == "AccountCreation.EduFocus":
+        focus = req["queryResult"]["parameters"]["Focus"]
+        return setEduFocus(focus)
+
 #Speech Sub-App
 def SetSpeechTopic(speechTopic: str):
     SpeechTopic = speechTopic
@@ -80,10 +99,25 @@ def HandleQuestionType(InterviewType:  str):
         output = "Great! Here is your question: {} .... Start when you're ready!".format(question)
         return {'fulfillmentText': output}
     else:
-        return {'fulfillmentText': 'Invalid Selection'}
+        return {'fulfillmentText': 'error'}
 
 def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)
     return {'fulfillmentText': output}
+
+#User-Tailored Functions
+def setUsername(id):
+    User["username"]= id
+    print("User.Username was set to: ", id)
+
+def setEduLevel(level):
+    User["eduLevel"]= level
+    print("User.eduLevel was set to: ", level)
+
+def setEduFocus(focus):
+    User["eduFocus"]= focus
+    print("User.eduFocus was set to: ", focus)
+
+#-

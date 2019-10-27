@@ -11,6 +11,10 @@ SpeechTopic = None
 SpeechMetrics = {}
 InterviewMetrics = {}
 
+class TranscriptAnalysis:
+    def __init__(self,transcript):
+        self.Categories = []
+        self.transcript = transcript
 #Users "database"
 Users = []
 auth = False
@@ -89,16 +93,24 @@ def SetSpeechTopic(speechTopic: str):
     print("Topic was set to: ", SpeechTopic)
 
 def AnalyzeSpeech(content: str):
+    speechAnalyzer=TranscriptAnalysis(content)
+    sentiment=nlp.getSentiment(content)
+    speechAnalyzer.Categories=nlp.sample_classify_text(speechAnalyzer.transcript)
+    keyword_list=nlp.get_similarity_with_topic(speechAnalyzer.transcript,SpeechTopic,speechAnalyzer.Categories)
+    print(keyword_list)
+    print(content,"....",sentiment)
+    output="Great! Here is my feedback for you to improve:\n"
+    sentimentFeedback="Overall speech of your sentiment was {}\n".format(sentiment)
+    keywordFeedback="These are the keywords related to your speech: {}\n".format(','.join(keyword_list.split(',')))
+    CoverageFeedback=""
+    if len(speechAnalyzer.Categories)>=2:
+        CoverageFeedback="Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
+        CoverageFeedback+="Your coverage is pretty good as it is covering more than one topic in detail! Keep it up."
+    else:
+        CoverageFeedback = "Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
 
-    sentiment = nlp.getSentiment(content)
-    output1 = "Your speech seemed: {}".format(sentiment)
-
-    # global SpeechTopic
-    # Topicality = nlp.get_similarity_with_topic(content, SpeechTopic,)
-    # output2 = "Topicality: {}".format
-
-    output = output1 # + output2
-    return {'fulfillmentText': output}
+    output = output + sentimentFeedback + keywordFeedback + CoverageFeedback
+    return {"fullfillment" : output}
 
 #Inverview Sub-App
 def HandleQuestionType(InterviewType:  str):

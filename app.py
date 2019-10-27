@@ -15,6 +15,7 @@ class TranscriptAnalysis:
     def __init__(self,transcript):
         self.Categories = []
         self.transcript = transcript
+        
 #Users "database"
 Users = []
 auth = False

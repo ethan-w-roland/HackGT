@@ -130,7 +130,7 @@ def HandleQuestionType(InterviewType:  str):
         output = "Great! Here is your question: {} - Start when you're ready!".format(question)
         return {'fulfillmentText': output}
 
-def AnalyzeInterview(transcript: str):
+def AnalyzeInterview(transcript: str): 
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)

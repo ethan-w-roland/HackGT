@@ -111,7 +111,7 @@ def AnalyzeSpeech(content: str):
         '''
 
     output = output + sentimentFeedback + keywordFeedback + CoverageFeedback
-    return {"fullfillment" : output}
+    return {"fullfillmentText" : output}
 
 #Inverview Sub-App
 def HandleQuestionType(InterviewType:  str):

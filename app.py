@@ -37,7 +37,32 @@ def redirect():
     # req represents submitted data
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
-    print(intent)
+
+    #Restore Account
+    elif intent == "Login.User":
+        username = req["queryResult"]["parameters"]["Username"]
+        for el in Users:
+            if el['username'] == username:
+                User = el
+                break
+        return
+
+    #Account Management
+    elif intent == "AccountCreation.Username":
+        username = req["queryResult"]["parameters"]["Username"]
+        return setUsername(username)
+
+    elif intent == "AccountCreation.EduLevel":
+        level = req["queryResult"]["parameters"]["EducationLevel"]
+        return setEduLevel(level)
+
+    elif intent == "AccountCreation.EduFocus":
+        focus = req["queryResult"]["parameters"]["Field"]
+        return setEduFocus(focus)
+
+    if "endInteraction" in req["queryResult"]["intent"]: 
+        storeUser()
+        return
 
     #Speech Sub-App
     if intent == "Speech.Topic":
@@ -56,19 +81,6 @@ def redirect():
     elif intent == "Interview.Content":
         content = req["queryResult"]["parameters"]["Content"]
         return AnalyzeInterview(content)
-
-    #Account Creation
-    elif intent == "AccountCreation.Username":
-        username = req["queryResult"]["parameters"]["Username"]
-        return setUsername(username)
-
-    elif intent == "AccountCreation.EduLevel":
-        level = req["queryResult"]["parameters"]["Level"]
-        return setEduLevel(level)
-
-    elif intent == "AccountCreation.EduFocus":
-        focus = req["queryResult"]["parameters"]["Focus"]
-        return setEduFocus(focus)
 
 #Speech Sub-App
 def SetSpeechTopic(speechTopic: str):
@@ -107,7 +119,7 @@ def AnalyzeInterview(transcript: str):
     output = "Your interview seemed: {}".format(sentiment)
     return {'fulfillmentText': output}
 
-#User-Tailored Functions
+#Account Creation
 def setUsername(id):
     User["username"]= id
     print("User.Username was set to: ", id)
@@ -120,4 +132,14 @@ def setEduFocus(focus):
     User["eduFocus"]= focus
     print("User.eduFocus was set to: ", focus)
 
-#-
+def storeUser():
+    if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
+        Users.append(User)
+
+#User Tailored Functions
+
+def recommendContent():
+    return None
+
+def recommendContent():
+    return None

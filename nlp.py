@@ -8,7 +8,7 @@ from google.cloud.language import enums
 from google.cloud.language import types
 client = language.LanguageServiceClient() # Instantiates a client
 
-def getSentiment(text: str):
+def getSentiment(text):
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -20,3 +20,6 @@ def getSentiment(text: str):
         return "Negative"
     else:
         return "Neutral"
+
+def getTopicRelevance(topic, text):
+    return None

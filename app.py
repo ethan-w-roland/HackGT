@@ -44,8 +44,7 @@ def redirect():
     #Account Management
     if intent == "Login.Username":
         username = req["queryResult"]["parameters"]["Username"]
-        restoreUser(username)
-        return
+        return restoreUser(username)
 
     if "endInteraction" in req["queryResult"]["intent"]: 
         storeUser()
@@ -131,7 +130,8 @@ def restoreUser(username):
         if el['username'] == username:
             User = el
             auth = True
-            break
+            return {'fulfillmentText': 'Login Successful'}
+    return {'fulfillmentText': 'Login Unsuccessful'}
 
 def storeUser():
     global User

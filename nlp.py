@@ -1,3 +1,4 @@
+@ -1,22 +0,0 @@
 #set environmental variable for google auth
 import os
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./gCloudAuth.json"

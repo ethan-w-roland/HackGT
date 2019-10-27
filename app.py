@@ -143,7 +143,7 @@ def setEduFocus(focus):
     print("User.eduFocus was set to: ", focus)
 
 def storeUser():
-    User = self.User
+    global User
     if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
         Users.append(User)
         User = {"username": None,

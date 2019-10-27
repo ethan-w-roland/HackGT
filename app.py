@@ -75,14 +75,14 @@ def AnalyzeSpeech(content: str):
 #Inverview Sub-App
 def HandleQuestionType(InterviewType:  str):
     print("question type is: ", InterviewType)
-    if InterviewType == "General":
+    if InterviewType == "general":
         #fetch random interview topic
         lines = open('./interview/questions.txt').read().splitlines()
         question = random.choice(lines).strip()
         print('Randomly picked question is: ', question)
         output = "Great! Here is your question: {} .... Start when you're ready!".format(question)
         return {'fulfillmentText': output}
-    elif InterviewType == "Computer Science":
+    elif InterviewType == "CS":
         #fetch random interview topic
         lines = open('./interview/csbasicquestions.txt').read().splitlines()
         question = random.choice(lines).strip()

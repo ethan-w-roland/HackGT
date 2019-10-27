@@ -62,7 +62,7 @@ def sample_classify_text(text_content: str):
 def get_similarity_with_topic(transcript, speechTopic, categories):
     client = textrazor.TextRazor(extractors=["topics"])
     textrazor_resonse = client.analyze(transcript)
-    topic_list = textrazor_resonse.topics()[:5]
+    topic_list = textrazor_resonse.topics()
     print('topic list is',topic_list)
     keyword_list = []
     for topic in topic_list:

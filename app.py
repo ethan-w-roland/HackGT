@@ -95,10 +95,6 @@ def AnalyzeSpeech(content: str):
     sentiment = nlp.getSentiment(content)
     print(content, "....", sentiment)
     output = "Your speech seemed: {}".format(sentiment)
-    # if SpeechMetrics != {}:
-    #     oldSent = SpeechMetrics['sentiment']
-    #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-    # SpeechMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
 #Inverview Sub-App
@@ -120,14 +116,10 @@ def HandleQuestionType(InterviewType:  str):
         return {'fulfillmentText': output}
 
 def AnalyzeInterview(transcript: str):
-    '''sentiment = nlp.getSentiment(transcript)
+    sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)
-    # if InterviewMetrics != {}:
-    #     oldSent = InterviewMetrics['sentiment']
-    # #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-    # InterviewMetrics['sentiment'] = sentiment'''
-    return {'fulfillmentText': "output"}
+    return {'fulfillmentText': output}
 
 #Account Creation
 def restoreUser(username):
@@ -164,8 +156,9 @@ def storeUser():
 def branchAuth():
 
     if auth == True:
-        respText = ('Exiting. Say "Interviews" to practice interviews, "Speech" to practice public '
-                    'speaking, or "Recommendations" to get study recommendations')
+        respText = ('Exiting. Say "Interviews" to practice interviews, or "Speech" to practice public speaking')
+        # respText = ('Exiting. Say "Interviews" to practice interviews, "Speech" to practice public '
+        #             'speaking, or "Recommendations" to get study recommendations')
         return {'fulfillmentText': respText}
 
     elif auth == False:
@@ -173,8 +166,14 @@ def branchAuth():
         return {'fulfillmentText': respText}
 
 #User Tailored Functions
+# def recommendContent():
+#     def SearchAndPrint(search_terms): #returns videoID
+#         yt_service = gdata.youtube.service.YouTubeService()
+#         query = gdata.youtube.service.YouTubeVideoQuery()
+#         query.vq = search_terms
+#         query.orderby = 'viewCount'
+#         query.racy = 'include'
+#         feed = yt_service.YouTubeQuery(query)
+#     if User["eduLevel"] == "Middle School" or User["eduLevel"] == "High School":
 
-def recommendContent():
-    if User["eduLevel"] == "Middle" or User["eduLevel"] == "HighSchool":
-        
-    return None
+#     return None

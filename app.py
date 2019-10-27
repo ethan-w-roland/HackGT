@@ -42,32 +42,34 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
 
     #Restore Account
-    if intent == "Login":
+    if intent == "Login.User":
         username = req["queryResult"]["parameters"]["Username"]
-        restoreUser(username)
+        restoreAccount(username)
         return
 
+    #Account Management
     elif intent == "AccountCreation":
-        auth = True
         username = req["queryResult"]["parameters"]["Username"]
-        eduLevel = req["queryResult"]["parameters"]["Level"]
-        eduFocus = req["queryResult"]["parameters"]["Field"]
-        User = {"username": username,
-                "eduLevel": eduLevel,
-                "eduFocus": eduFocus}
-        print(User)
-        return
+        return setUsername(username)
+
+    elif intent == "AccountCreation.EduLevel":
+        level = req["queryResult"]["parameters"]["Level"]
+        return setEduLevel(level)
+
+    elif intent == "AccountCreation.EduFocus":
+        focus = req["queryResult"]["parameters"]["Field"]
+        return setEduFocus(focus)
 
     elif "endInteraction" in req["queryResult"]["intent"]: 
         storeUser()
         return
 
-    #Authorization Check
-    if intent == "Exit":
+    #Authorization
+    if intent == "Speech.Exit" or "Interview.Exit":
         return(branchAuth())
 
     #Speech Sub-App
-    if intent == "Speech":
+    if intent == "Speech.Topic":
         topic = req["queryResult"]["parameters"]["Topic"]
         return SetSpeechTopic(topic)
 
@@ -76,7 +78,7 @@ def redirect():
         return AnalyzeSpeech(content)
 
     #Interview Sub-App
-    elif intent == "Interview":
+    elif intent == "Interview.Type":
         qType = req["queryResult"]["parameters"]["QuestionType"]
         return HandleQuestionType(qType)
     
@@ -95,8 +97,7 @@ def AnalyzeSpeech(content: str):
     output = "Your speech seemed: {}".format(sentiment)
     if SpeechMetrics != {}:
         oldSent = SpeechMetrics['sentiment']
-        change =  "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-        output = output + change
+        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
     SpeechMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
@@ -123,13 +124,11 @@ def HandleQuestionType(InterviewType:  str):
 def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
-    output = "Your interview seemed {}.".format(sentiment)
+    output = "Your interview seemed: {}".format(sentiment)
     if InterviewMetrics != {}:
         oldSent = InterviewMetrics['sentiment']
-        change = " Your sentiment changed by {}%.".format(sentiment/oldSent)
-        output = change + output
+        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
     InterviewMetrics['sentiment'] = sentiment
-    output = output + ' Say "Another Interview" to keep practicing. Otherwise, say "Exit Interview" to end interview practice'
     return {'fulfillmentText': output}
 
 #Account Creation
@@ -139,6 +138,19 @@ def restoreUser(username):
             User = el
             auth = True
             break
+
+def setUsername(id):
+    auth = True
+    User["username"]= id
+    print("User.Username was set to: ", id)
+
+def setEduLevel(level):
+    User["eduLevel"]= level
+    print("User.eduLevel was set to: ", level)
+
+def setEduFocus(focus):
+    User["eduFocus"]= focus
+    print("User.eduFocus was set to: ", focus)
 
 def storeUser():
     if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
@@ -154,15 +166,31 @@ def storeUser():
 def branchAuth():
 
     if auth == True:
-        output = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, "Recommendations" to get study recommendations, or "Inquiry" to '
                     'ask Bemo a question')
-        return {'fulfillmentText': output}
+        req = request.get_json(force=True)
+        oldContext = req["queryResult"]["outputContexts"]["name"]
+        newContext = oldContext.split('/Dummy')[0] + "Authorized"
+        return {'fulfillmentText': respText,
+                'outputContexts':[{
+                    "name": newContext,
+                    "lifespanCount": 5
+                    }]
+                }
 
     elif auth == False:
-        output = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, or "Inquiry" to ask Bemo a question')
-        return {'fulfillmentText': output}
+        req = request.get_json(force=True)
+        oldContext = req["queryResult"]["outputContexts"]["name"]
+        newContext = oldContext.split('/Dummy')[0] + "Anonymous"
+        return {'fulfillmentText': respText,
+                'outputContexts':[{
+                    "name": newContext,
+                    "lifespanCount": 5
+                    }]
+                }
 
 #User Tailored Functions
 

@@ -63,8 +63,8 @@ def redirect():
         return
 
     #Authorization Check
-    if intent == "Speech.Exit" or "Interview.Exit" or "Inquiry.Exit":
-        return(branchAuth())
+    # if intent == "Speech.Exit" or "Interview.Exit" or "Inquiry.Exit":
+    #     return(branchAuth())
 
     #Speech Sub-App
     if intent == "Speech":

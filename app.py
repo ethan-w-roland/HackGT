@@ -37,54 +37,38 @@ def webhook():
 
 # function for responses - branches based on intent
 def redirect():
-     # req represents submitted data
+
+    # req represents submitted data
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
     print(intent)
 
-    if intent == "GetSubApp": #aka which sub-app to go to
-        helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
-        return HandleDetectIntent(helpVariable)
-
     #Speech Sub-App
-    elif intent == "GetSpeechTopic":
-        speechTopic = req["queryResult"]["parameters"]["SpeechTopic"]
-        return SetSpeechTopic(speechTopic)
+    if intent == "Speech.Topic":
+        topic = req["queryResult"]["parameters"]["Topic"]
+        return SetSpeechTopic(topic)
 
-    elif intent == "GetSpeech":
-        Transcript = req["queryResult"]["queryText"]
-        return AnalyzeSpeech(Transcript)
+    elif intent == "Speech.Content":
+        content = req["queryResult"]["parameters"]["Content"]
+        return AnalyzeSpeech(content)
 
     #Interview Sub-App
-    elif intent == "GetInterviewType":
-        InterviewType = req["queryResult"]["parameters"]["HelpCategory"]
-        return HandleQuestionType(InterviewType)
+    elif intent == "Interview.Type":
+        qType = req["queryResult"]["parameters"]["QuestionType"]
+        return HandleQuestionType(qType)
     
-    elif intent == "GetInterview":
-        Transcript = req["queryResult"]["queryText"]
-        return AnalyzeInterview(Transcript)
-
-    else:
-         return {'fulfillmentText': 'No supported intent detected'}
-
-def HandleDetectIntent(HelpVariable: str):
-    print('HelpVariable is: ', HelpVariable)
-    if HelpVariable == "speech":
-        return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}
-    elif HelpVariable == 'interview':
-        return {"followupEventInput" : {"name" : "AskInterviewTypeEvent"}}
-    else:
-        return {'fulfillmentText': 'Invalid Selection'}
+    elif intent == "Interview.Content":
+        content = req["queryResult"]["parameters"]["Content"]
+        return AnalyzeInterview(content)
 
 #Speech Sub-App
 def SetSpeechTopic(speechTopic: str):
     SpeechTopic = speechTopic
     print("Topic was set to: ", SpeechTopic)
-    return {'fulfillmentText': 'Great, begin your speech.'}
 
-def AnalyzeSpeech(transcript: str):
-    sentiment = nlp.getSentiment(transcript)
-    print(transcript, "....", sentiment)
+def AnalyzeSpeech(content: str):
+    sentiment = nlp.getSentiment(content)
+    print(content, "....", sentiment)
     output = "Your speech seemed: {}".format(sentiment)
     return {'fulfillmentText': output}
 

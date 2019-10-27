@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "plasma-torus-257113",
+  "private_key_id": "863dda34a014dbc4a09d87fdb28ea5f17394039e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCU3mmGJZtq7rHg\nSJmRa0CMfbgoAQEgb/9kDKAkAt0F1Bwe//r5yqrhckPbkQ7wzbHHByzMm4BrYc75\nQMff7XnBM3k672bJ7YQGQ8c1Zkq5SYYfTw8filvmIQbbko0PP9GUlfi9AU9X4i0E\n6FYJq5kIEAEyYCKsfVmlZw0PKHcGSPGluNaMMsfBS2lcI9v9xBUvoo5c87rBafZX\n00XqdFVJ8EDCDHCgqGroKRsE76iBLebdniE0LkG3JB25HZJQ0BKTYAeiEtMVz/yi\nh38EZnKtXabEo2ygEfmMJIN2d7poOyGnxmMR7G0jmhTjFMoEzsq1ydRQaJu5RgWY\nS2oMx1jHAgMBAAECggEASSq5PYvtQ5S2iw/TnnPSwVom8U5xEdLJ+I/2A0z++Zbj\nDV9tqGiyLOT+sgMtDzBhwHrny1ZgOybS1ZG/yvDKRyk3273/TJ62pWeZmMbCUifv\nSiMOwUc83LH9z1xLhSOuK7O8EZT7vKt2yfMxGkajC6HmHK7AS/u93Dv2YK1YNpdS\nLLM+fgN2LY9HgesZRbHo+BvzatylA+q8fn+iU3KnEfFT/Lo0L0r/4ci6owlK+GIS\nfAHeA1/u67iOCjIKMWSoN94PEmcecQVgYG4mOsWmGlzmegQB7C5vbhDgISwuURJy\n0abj8Si4GC3t/sWRrWiUPsyJM0enboqO91LbnPCH9QKBgQDOmJTn5qZmldQq8lqa\nVP+bsqwnlb+uSXCckhNkrf5eol/1NjBbqKAjP/aYPPzjFISVAXOln1pNbfQIbTvA\nJR9qQD5UP2UFQuXxyZxRA1geqQ6zY/uZh+95xGkEayqXfbRpLtx/kmR/5fXh+6jo\nQOIkZCMRJFwin1pNAEMyPEfmVQKBgQC4d+D9s5qxH6jol5mVpPmXgq983MPV+YEC\n0ImcN7A4WoXzotvfOvuCsL+IJs8S7uV4GpObZ/Se+U40+l6jBnvoWfLWZT2UWElN\n9qCFg1sWl8EkDNCxNzMVzCAEeFZrXpayRbVy6Q87C7i59kJhGpaZN9XB27HIrya1\nf8n63XCGqwKBgArwTUISFlFsMXWsq1tskLQfu7nE1gdWYB4KJfi4tbUxB7+mBN11\nijUTl+zrncAwP+zbzNHCJDfhUIB5uCYuUQGBMUuop6KlriMlN5+ae7nz3ZFmA9ZX\nOjjKS30uZ2zp/Plsv8QJbkTPWjuC5aiWduLSYoDv2ekDYvacwvIP+waZAoGBAK6v\n54KZSM6fOqc4mRrbJflSqrjFnzbMll2B+i7Tla9oGh3Ehg75nh//HQHkLoixbuCz\n2kB6y26YjHUi++fKRiCcvZhGO3B1wsVv3kdRQzs77o0jDaYkrd3gdhmFk+ENrAua\nc+Aj0GaMDR0dlXK7aQ4jj+uLDusK4s9R+oX0mZENAoGAMeV0SDEzn+Oy7GY0Kaba\nagVxSYEUq4mGUy3V6H5TX3owywT0+fpVRtkj6atefwKA6nN6q3ZgVEbQtAm4K/Y5\nnnl0DMaL/mN/z64qshjbZMAjQYKrzOc2w3FnXT7OyOKg/LfDjqZaR2lGUmoayY0Y\neF6Tz+sWipXyRdDEKWvjnys=\n-----END PRIVATE KEY-----\n",
+  "client_email": "bemo-assistant@plasma-torus-257113.iam.gserviceaccount.com",
+  "client_id": "113652549887378385859",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bemo-assistant%40plasma-torus-257113.iam.gserviceaccount.com"
+}

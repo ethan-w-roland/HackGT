@@ -120,14 +120,14 @@ def HandleQuestionType(InterviewType:  str):
         return {'fulfillmentText': output}
 
 def AnalyzeInterview(transcript: str):
-    sentiment = nlp.getSentiment(transcript)
+    '''sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)
     # if InterviewMetrics != {}:
     #     oldSent = InterviewMetrics['sentiment']
     # #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-    # InterviewMetrics['sentiment'] = sentiment
-    return {'fulfillmentText': output}
+    # InterviewMetrics['sentiment'] = sentiment'''
+    return {'fulfillmentText': "output"}
 
 #Account Creation
 def restoreUser(username):

@@ -10,7 +10,7 @@ client = language.LanguageServiceClient() # Instantiates a client
 
 def getSentiment(text: str):
     document = types.Document(
-        content=transcript,
+        content=text,
         type=enums.Document.Type.PLAIN_TEXT)
     sentiment = client.analyze_sentiment(document=document).document_sentiment
     score = sentiment.score

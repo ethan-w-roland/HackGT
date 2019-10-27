@@ -2,7 +2,11 @@
 from flask import Flask, request, make_response, jsonify
 import random
 import nlp
-
+class TranscriptAnalysis:
+    def __init__(self,transcript):
+        self.Categories = []
+        self.SpeechTopic = ""
+        self.transcript = transcript
 #---BEGIN APPLICATION---
 
 # initialize the flask app
@@ -92,9 +96,26 @@ def SetSpeechTopic(speechTopic: str):
     print("Topic was set to: ", SpeechTopic)
 
 def AnalyzeSpeech(content: str):
+    speechAnalyzer = TranscriptAnalysis(content)
     sentiment = nlp.getSentiment(content)
+    speechAnalyzer.Categories = nlp.sample_classify_text(speechAnalyzer.transcript)
+    keyword_list = nlp.get_similarity_with_topic(speechAnalyzer.transcript,SpeechTopic,speechAnalyzer.Categories)
+    print(keyword_list)
     print(content, "....", sentiment)
-    output = "Your speech seemed: {}".format(sentiment)
+    output = "Great! Here is my feedback for you to improve:\n"
+    sentimentFeedback = "Overall speech of your sentiment was {}\n".format(sentiment)
+
+    keywordFeedback = "These are the keywords related to your speech: {}\n".format(','.join(keyword_list.split(',')))
+    CoverageFeedback = ""
+    if len(speechAnalyzer.Categories) >= 2:
+        CoverageFeedback = "Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
+        CoverageFeedback += "Your coverage is pretty good as it is covering more than one topic in detail! Keep it up."
+    else:
+        CoverageFeedback = "Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
+
+    output = output + sentimentFeedback + keywordFeedback + CoverageFeedback
+        
+
     # if SpeechMetrics != {}:
     #     oldSent = SpeechMetrics['sentiment']
     #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)

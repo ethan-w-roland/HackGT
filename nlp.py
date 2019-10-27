@@ -14,11 +14,7 @@ import spacy
 
 textrazor.api_key = "56242e609bd323434ac79e3d17040e7a895d79400439ffe8e5e76eb8"
 
-class TranscriptAnalysis:
-    def __init__(self,transcript):
-        self.Categories = []
-        self.SpeechTopic = ""
-        self.transcript = transcript
+
 
 
 def getSentiment(text: str):
@@ -71,7 +67,12 @@ def sample_classify_text(text_content: str):
         # is that this category represents the provided text.
         print(u"Confidence: {}".format(category.confidence))
     '''
-    return response.categories
+    tuple_list = []
+    for category in response.categories:
+        tuple_list.append((category.name,category.confidence))
+
+    
+    return tuple_list
     
 
 transcript = "San Francisco is often called Everybody’s Favorite City, a title earned by its scenic beauty, cultural attractions, diverse communities, and world-class cuisine. Measuring 49 square miles, this very walk-able city is dotted with landmarks like the Golden Gate Bridge, cable cars, Alcatraz and the largest Chinatown in the United States. A stroll of the City’s streets can lead from Union Square to North Beach to Fisherman’s Wharf, with intriguing neighborhoods to explore at every turn. Views of the Pacific Ocean and San Francisco Bay are often laced with fog, creating a romantic mood in this most European of American cities."
@@ -83,8 +84,15 @@ def get_similarity_with_topic(transcript, speechTopic, categories):
     textrazor_resonse = client.analyze(transcript)
     topic_list = textrazor_resonse.topics()[:5]
     print('topic list is',topic_list)
+    keyword_list = []
     for topic in topic_list:
-        print(topic.label)
+        keyword_list.append(topic.label)
+
+    category_list = textrazor_resonse.categories()
+    print(category_list)
+
+    main_keyword = topic_list[0].label
+    return keyword_list
     '''max_similarity = -1000
     nlp = spacy.load('en_core_web_lg') 
     print(topic_list)
@@ -99,4 +107,4 @@ def get_similarity_with_topic(transcript, speechTopic, categories):
     
     
 
-get_similarity_with_topic(transcript, "basketball", sample_classify_text(transcript))
+#get_similarity_with_topic(transcript, "basketball", sample_classify_text(transcript))

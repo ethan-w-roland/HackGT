@@ -42,21 +42,28 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
     print(intent)
 
-    if intent == "DetectIntent": #aka which sub-app to go to
+    if intent == "(1)GetSubApp": #aka which sub-app to go to
         helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
         return HandleDetectIntent(helpVariable)
 
-    elif intent == "GetSpeechTopic":  #aka set speech topic
+    #Speech Sub-App
+    elif intent == "GetSpeechTopic":
         speechTopic = req["queryResult"]["parameters"]["SpeechTopic"]
         return SetSpeechTopic(speechTopic)
 
-    elif intent == "GetSpeech": #aka get speech transcript
+    elif intent == "GetSpeech":
         Transcript = req["queryResult"]["parameters"]["Transcript"]
         return AnalyzeSpeech(Transcript)
 
-    elif intent == "GetInterviewType":  #aka set interview type question
+    #Interview Sub-App
+    elif intent == "GetInterviewType":
         InterviewType = req["queryResult"]["parameters"]["HelpCategory"]
         return HandleQuestionType(InterviewType)
+    
+    elif intent == "GetInterview":
+        Transcript = req["queryResult"]["parameters"]["Transcript"]
+        return AnalyzeInterview(Transcript)
+
     else:
          return {'fulfillmentText': 'No supported intent detected'}
 
@@ -65,10 +72,11 @@ def HandleDetectIntent(HelpVariable: str):
     if HelpVariable == "speech":
         return {"followupEventInput" : {"name" : "AskSpeechTopicEvent"}}
     elif HelpVariable == 'interview':
-        return {"followupEventInput" : {"name" : "GetInterviewTypeEvent"}}
+        return {"followupEventInput" : {"name" : "AskInterviewTypeEvent"}}
     else:
         return {'fulfillmentText': 'Invalid Selection'}
 
+#Speech Sub-App
 def SetSpeechTopic(speechTopic: str):
     SpeechTopic = speechTopic
     print("Topic was set to: ", SpeechTopic)
@@ -77,21 +85,31 @@ def SetSpeechTopic(speechTopic: str):
 def AnalyzeSpeech(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
-    return {'fulfillmentText': sentiment}
+    output = "Your speech seemed: {}".format(sentiment)
+    return {'fulfillmentText': output}
 
+#Inverview Sub-App
 def HandleQuestionType(InterviewType:  str):
     print("question type is: ", InterviewType)
     if InterviewType == "General":
         #fetch random interview topic
         lines = open('./interview/questions.txt').read().splitlines()
-        intTopic = random.choice(lines).strip()
-        print('Randomly picked interview topic is: ', intTopic)
-        return {'fulfillmentText': intTopic}
+        question = random.choice(lines).strip()
+        print('Randomly picked question is: ', question)
+        output = "Great! Here is your question: {} .... Start when you're ready!".format(question)
+        return {'fulfillmentText': output}
     elif InterviewType == "Computer Science":
         #fetch random interview topic
         lines = open('./interview/csbasicquestions.txt').read().splitlines()
-        intTopic = random.choice(lines).strip()
-        print('Randomly picked interview topic is: ', intTopic)
-        return {'fulfillmentText': intTopic}
+        question = random.choice(lines).strip()
+        print('Randomly picked question is: ', question)
+        output = "Great! Here is your question: {} .... Start when you're ready!".format(question)
+        return {'fulfillmentText': output}
     else:
-        return {'fulfillmentText': 'This is a response from webhook.'}
+        return {'fulfillmentText': 'Invalid Selection'}
+
+def AnalyzeInterview(transcript: str):
+    sentiment = nlp.getSentiment(transcript)
+    print(transcript, "....", sentiment)
+    output = "Your interview seemed: {}".format(sentiment)
+    return {'fulfillmentText': output}

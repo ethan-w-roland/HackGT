@@ -16,8 +16,6 @@ def getSentiment(text: str):
     score = sentiment.score
     if score > 0.3:
         return "Positive, out of 10 you got " + str(int(score * 10))
-        if score < 0.8
-            return "It might be too positive, out of 10 you got " + str(int(score * 10))
     elif score < -0.3:
         return "Negative out of -10 you got " + str(int(score * 10))
     else:

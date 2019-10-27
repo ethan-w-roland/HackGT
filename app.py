@@ -57,7 +57,7 @@ def redirect():
         content = req["queryResult"]["parameters"]["Content"]
         return AnalyzeInterview(content)
 
-    #User Creation
+    #Account Creation
     elif intent == "AccountCreation.Username":
         username = req["queryResult"]["parameters"]["Username"]
         return setUsername(username)

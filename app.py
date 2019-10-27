@@ -95,7 +95,8 @@ def AnalyzeSpeech(content: str):
     output = "Your speech seemed: {}".format(sentiment)
     if SpeechMetrics != {}:
         oldSent = SpeechMetrics['sentiment']
-        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+        change =  "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+        output = output + change
     SpeechMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
@@ -122,12 +123,13 @@ def HandleQuestionType(InterviewType:  str):
 def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
-    output = "Your interview seemed: {}".format(sentiment)
+    output = "Your interview seemed {}.".format(sentiment)
     if InterviewMetrics != {}:
         oldSent = InterviewMetrics['sentiment']
-        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+        change = " Your sentiment changed by {}%.".format(sentiment/oldSent)
+        output = change + output
     InterviewMetrics['sentiment'] = sentiment
-    output += '\nSay "Another Interview" to keep practicing. Otherwise, say "Exit Interview" to end interview practice'
+    output = output + ' Say "Another Interview" to keep practicing. Otherwise, say "Exit Interview" to end interview practice'
     return {'fulfillmentText': output}
 
 #Account Creation

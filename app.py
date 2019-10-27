@@ -52,7 +52,7 @@ def redirect():
         return SetSpeechTopic(speechTopic)
 
     elif intent == "GetSpeech":
-        Transcript = req["queryResult"]["parameters"]["Transcript"]
+        Transcript = req["queryResult"]["queryText"]
         return AnalyzeSpeech(Transcript)
 
     #Interview Sub-App
@@ -61,7 +61,7 @@ def redirect():
         return HandleQuestionType(InterviewType)
     
     elif intent == "GetInterview":
-        Transcript = req["queryResult"]["parameters"]["Transcript"]
+        Transcript = req["queryResult"]["queryText"]
         return AnalyzeInterview(Transcript)
 
     else:

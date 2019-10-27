@@ -74,7 +74,7 @@ def redirect():
         return SetSpeechTopic(topic)
 
     elif intent == "Speech.Content":
-        content = req["queryResult"]["parameters"]["Transcript"]
+        content = req["queryResult"]["parameters"]["SpeechTranscript"]
         return AnalyzeSpeech(content)
 
     #Interview Sub-App

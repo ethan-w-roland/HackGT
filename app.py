@@ -95,19 +95,20 @@ def SetSpeechTopic(speechTopic: str):
 def AnalyzeSpeech(content: str):
     speechAnalyzer=TranscriptAnalysis(content)
     sentiment=nlp.getSentiment(content)
-    speechAnalyzer.Categories=nlp.sample_classify_text(speechAnalyzer.transcript)
+    #speechAnalyzer.Categories=nlp.sample_classify_text(speechAnalyzer.transcript)
     keyword_list=nlp.get_similarity_with_topic(speechAnalyzer.transcript,SpeechTopic,speechAnalyzer.Categories)
     print(keyword_list)
     print(content,"....",sentiment)
     output="Great! Here is my feedback for you to improve:\n"
     sentimentFeedback="Overall speech of your sentiment was {}\n".format(sentiment)
-    keywordFeedback="These are the keywords related to your speech: {}\n".format(','.join(keyword_list.split(',')))
+    keywordFeedback="These are the keywords related to your speech: {}\n".format(','.join(w for w in keyword_list))
     CoverageFeedback=""
-    if len(speechAnalyzer.Categories)>=2:
+    '''if len(speechAnalyzer.Categories)>=2:
         CoverageFeedback="Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
         CoverageFeedback+="Your coverage is pretty good as it is covering more than one topic in detail! Keep it up."
     else:
         CoverageFeedback = "Your speech covered following topics: {}".format(",".join(cat_name[0] for cat_name in speechAnalyzer.Categories))
+        '''
 
     output = output + sentimentFeedback + keywordFeedback + CoverageFeedback
     return {"fullfillment" : output}

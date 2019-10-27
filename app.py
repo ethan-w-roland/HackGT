@@ -65,7 +65,7 @@ def redirect():
         return
 
     #Authorization
-    if intent == "Speech.Exit" or "Interview.Exit":
+    if intent == "Exit":
         return(branchAuth())
 
     #Speech Sub-App
@@ -95,10 +95,10 @@ def AnalyzeSpeech(content: str):
     sentiment = nlp.getSentiment(content)
     print(content, "....", sentiment)
     output = "Your speech seemed: {}".format(sentiment)
-    if SpeechMetrics != {}:
-        oldSent = SpeechMetrics['sentiment']
-        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-    SpeechMetrics['sentiment'] = sentiment
+    # if SpeechMetrics != {}:
+    #     oldSent = SpeechMetrics['sentiment']
+    #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+    # SpeechMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
 #Inverview Sub-App
@@ -118,8 +118,6 @@ def HandleQuestionType(InterviewType:  str):
         print('Randomly picked question is: ', question)
         output = "Great! Here is your question: {} .... Start when you're ready!".format(question)
         return {'fulfillmentText': output}
-    else:
-        return {'fulfillmentText': 'error'}
 
 def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)

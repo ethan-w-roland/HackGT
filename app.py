@@ -90,9 +90,15 @@ def SetSpeechTopic(speechTopic: str):
     print("Topic was set to: ", SpeechTopic)
 
 def AnalyzeSpeech(content: str):
+
     sentiment = nlp.getSentiment(content)
-    print(content, "....", sentiment)
-    output = "Your speech seemed: {}".format(sentiment)
+    output1 = "Your speech seemed: {}".format(sentiment)
+
+    # global SpeechTopic
+    # Topicality = nlp.get_similarity_with_topic(content, SpeechTopic,)
+    # output2 = "Topicality: {}".format
+
+    output = output1 # + output2
     return {'fulfillmentText': output}
 
 #Inverview Sub-App
@@ -119,13 +125,26 @@ def AnalyzeInterview(transcript: str):
     output = "Your interview seemed: {}".format(sentiment)
     return {'fulfillmentText': output}
 
-#Account Creation
+#Account Related Functions
 def restoreUser(username):
     for el in Users:
         if el['username'] == username:
             User = el
             auth = True
             break
+
+def storeUser():
+    global User
+    print(User)
+    if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
+        Users.append(User)
+        User = {"username": None,
+                "eduLevel": None,
+                "eduFocus": None}
+        SpeechMetrics = {}
+        InterviewMetrics = {}
+        SpeechTopic = None
+    auth = False
 
 def setUsername(id):
     auth = True
@@ -139,18 +158,6 @@ def setEduLevel(level):
 def setEduFocus(focus):
     User["eduFocus"]= focus
     print("User.eduFocus was set to: ", focus)
-
-def storeUser():
-    global User
-    if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
-        Users.append(User)
-        User = {"username": None,
-                "eduLevel": None,
-                "eduFocus": None}
-        SpeechMetrics = {}
-        InterviewMetrics = {}
-        SpeechTopic = None
-    auth = False
 
 def branchAuth():
 

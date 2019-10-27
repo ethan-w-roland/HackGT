@@ -42,7 +42,7 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
 
     #Account Management
-    if intent == "Login.User":
+    if intent == "Login.Username":
         username = req["queryResult"]["parameters"]["Username"]
         restoreUser(username)
         return

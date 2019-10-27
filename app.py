@@ -126,6 +126,8 @@ def AnalyzeInterview(transcript: str):
 
 #Account Related Functions
 def restoreUser(username):
+    print(Users)
+    print(username)
     for el in Users:
         if el['username'] == username:
             User = el

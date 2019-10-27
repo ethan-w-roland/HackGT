@@ -42,23 +42,21 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
 
     #Restore Account
-    if intent == "Login.User":
+    if intent == "Login":
         username = req["queryResult"]["parameters"]["Username"]
-        restoreAccount(username)
+        restoreUser(username)
         return
 
-    #Account Management
-    elif intent == "AccountCreation.Username":
+    elif intent == "AccountCreation":
+        auth = True
         username = req["queryResult"]["parameters"]["Username"]
-        return setUsername(username)
-
-    elif intent == "AccountCreation.EduLevel":
-        level = req["queryResult"]["parameters"]["EducationLevel"]
-        return setEduLevel(level)
-
-    elif intent == "AccountCreation.EduFocus":
-        focus = req["queryResult"]["parameters"]["Field"]
-        return setEduFocus(focus)
+        eduLevel = req["queryResult"]["parameters"]["Level"]
+        eduFocus = req["queryResult"]["parameters"]["Field"]
+        User = {"username": username,
+                "eduLevel": eduLevel,
+                "eduFocus": eduFocus}
+        print(User)
+        return
 
     elif "endInteraction" in req["queryResult"]["intent"]: 
         storeUser()
@@ -138,19 +136,6 @@ def restoreUser(username):
             User = el
             auth = True
             break
-
-def setUsername(id):
-    auth = True
-    User["username"]= id
-    print("User.Username was set to: ", id)
-
-def setEduLevel(level):
-    User["eduLevel"]= level
-    print("User.eduLevel was set to: ", level)
-
-def setEduFocus(focus):
-    User["eduFocus"]= focus
-    print("User.eduFocus was set to: ", focus)
 
 def storeUser():
     if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):

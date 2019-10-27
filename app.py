@@ -41,28 +41,26 @@ def redirect():
     req = request.get_json(force=True)
     intent = req["queryResult"]["intent"]["displayName"]
 
-    #Restore Account
+    #Account Management
     if intent == "Login.User":
         username = req["queryResult"]["parameters"]["Username"]
         restoreUser(username)
         return
 
-    #Account Management
-    elif intent == "AccountCreation":
+    if "endInteraction" in req["queryResult"]["intent"]: 
+        storeUser()
+
+    if intent == "AccountCreation":
         username = req["queryResult"]["parameters"]["Username"]
         return setUsername(username)
 
-    elif intent == "AccountCreation.EduLevel":
+    if intent == "AccountCreation.EduLevel":
         level = req["queryResult"]["parameters"]["Level"]
         return setEduLevel(level)
 
-    elif intent == "AccountCreation.EduFocus":
+    if intent == "AccountCreation.EduFocus":
         focus = req["queryResult"]["parameters"]["Field"]
         return setEduFocus(focus)
-
-    elif "endInteraction" in req["queryResult"]["intent"]: 
-        storeUser()
-        return
 
     #Authorization
     if intent == "Exit":

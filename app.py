@@ -63,8 +63,8 @@ def redirect():
         return
 
     #Authorization Check
-    # if intent == "Speech.Exit" or "Interview.Exit" or "Inquiry.Exit":
-    #     return(branchAuth())
+    if intent == "Exit":
+        return(branchAuth())
 
     #Speech Sub-App
     if intent == "Speech":
@@ -127,6 +127,7 @@ def AnalyzeInterview(transcript: str):
         oldSent = InterviewMetrics['sentiment']
         output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
     InterviewMetrics['sentiment'] = sentiment
+    output += '\nSay "Another Interview" to keep practicing. Otherwise, say "Exit Interview" to end interview practice'
     return {'fulfillmentText': output}
 
 #Account Creation

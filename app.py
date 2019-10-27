@@ -42,7 +42,7 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
     print(intent)
 
-    if intent == "(1)GetSubApp": #aka which sub-app to go to
+    if intent == "GetSubApp": #aka which sub-app to go to
         helpVariable = req["queryResult"]["parameters"]["HelpCategory"]
         return HandleDetectIntent(helpVariable)
 

@@ -10,10 +10,10 @@ from google.cloud.language_v1 import enums
 from google.cloud.language_v1 import types
 client = language_v1.LanguageServiceClient() # Instantiates a client
 
-# import textrazor
-# import spacy
+import textrazor
+import spacy
 
-# textrazor.api_key = "56242e609bd323434ac79e3d17040e7a895d79400439ffe8e5e76eb8"
+textrazor.api_key = "56242e609bd323434ac79e3d17040e7a895d79400439ffe8e5e76eb8"
 
 
 #FUNCTIONS
@@ -24,11 +24,11 @@ def getSentiment(text: str):
     sentiment = client.analyze_sentiment(document=document).document_sentiment
     score = sentiment.score
     if score > 0.3:
-        return "Positive"
+        return "Positive, good job!"
     elif score < -0.3:
-        return "Negative"
+        return "Negative, you may want to change your tone!"
     else:
-        return "Neutral"
+        return "Neutral, you may want to be a bit more positive."
 
 # def sample_classify_text(text_content: str):
 #     """

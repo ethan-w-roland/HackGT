@@ -44,7 +44,7 @@ def redirect():
     #Restore Account
     if intent == "Login.User":
         username = req["queryResult"]["parameters"]["Username"]
-        restoreAccount(username)
+        restoreUser(username)
         return
 
     #Account Management
@@ -74,7 +74,7 @@ def redirect():
         return SetSpeechTopic(topic)
 
     elif intent == "Speech.Content":
-        content = req["queryResult"]["parameters"]["Content"]
+        content = req["queryResult"]["parameters"]["Transcript"]
         return AnalyzeSpeech(content)
 
     #Interview Sub-App
@@ -82,8 +82,8 @@ def redirect():
         qType = req["queryResult"]["parameters"]["QuestionType"]
         return HandleQuestionType(qType)
     
-    elif intent == "Interview.Content":
-        content = req["queryResult"]["parameters"]["Content"]
+    elif intent == "Interview.Transcript":
+        content = req["queryResult"]["parameters"]["Transcript"]
         return AnalyzeInterview(content)
 
 #Speech Sub-App
@@ -125,10 +125,10 @@ def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)
-    if InterviewMetrics != {}:
-        oldSent = InterviewMetrics['sentiment']
-        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
-    InterviewMetrics['sentiment'] = sentiment
+    # if InterviewMetrics != {}:
+    #     oldSent = InterviewMetrics['sentiment']
+    # #     output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+    # InterviewMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
 #Account Creation
@@ -169,28 +169,12 @@ def branchAuth():
         respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, "Recommendations" to get study recommendations, or "Inquiry" to '
                     'ask Bemo a question')
-        req = request.get_json(force=True)
-        oldContext = req["queryResult"]["outputContexts"]["name"]
-        newContext = oldContext.split('/Dummy')[0] + "Authorized"
-        return {'fulfillmentText': respText,
-                'outputContexts':[{
-                    "name": newContext,
-                    "lifespanCount": 5
-                    }]
-                }
+        return {'fulfillmentText': respText}
 
     elif auth == False:
         respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, or "Inquiry" to ask Bemo a question')
-        req = request.get_json(force=True)
-        oldContext = req["queryResult"]["outputContexts"]["name"]
-        newContext = oldContext.split('/Dummy')[0] + "Anonymous"
-        return {'fulfillmentText': respText,
-                'outputContexts':[{
-                    "name": newContext,
-                    "lifespanCount": 5
-                    }]
-                }
+        return {'fulfillmentText': respText}
 
 #User Tailored Functions
 

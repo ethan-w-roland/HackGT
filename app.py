@@ -164,20 +164,17 @@ def storeUser():
 def branchAuth():
 
     if auth == True:
-        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
-                    'speaking, "Recommendations" to get study recommendations, or "Inquiry" to '
-                    'ask Bemo a question')
+        respText = ('Exiting. Say "Interviews" to practice interviews, "Speech" to practice public '
+                    'speaking, or "Recommendations" to get study recommendations')
         return {'fulfillmentText': respText}
 
     elif auth == False:
-        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
-                    'speaking, or "Inquiry" to ask Bemo a question')
+        respText = ('Exiting. Say "Interviews" to practice interviews, or "Speech" to practice public speaking')
         return {'fulfillmentText': respText}
 
 #User Tailored Functions
 
 def recommendContent():
-    return None
-
-def tailoredInquiry():
+    if User["eduLevel"] == "Middle" or User["eduLevel"] == "HighSchool":
+        
     return None

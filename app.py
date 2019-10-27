@@ -8,9 +8,12 @@ import nlp
 # initialize the flask app
 app = Flask(__name__)
 SpeechTopic = None
+SpeechMetrics = {}
+InterviewMetrics = {}
 
 #Users "database"
 Users = []
+auth = False
 User = {"username": None,
         "eduLevel": None,
         "eduFocus": None}
@@ -39,12 +42,9 @@ def redirect():
     intent = req["queryResult"]["intent"]["displayName"]
 
     #Restore Account
-    elif intent == "Login.User":
+    if intent == "Login.User":
         username = req["queryResult"]["parameters"]["Username"]
-        for el in Users:
-            if el['username'] == username:
-                User = el
-                break
+        restoreAccount(username)
         return
 
     #Account Management
@@ -60,9 +60,13 @@ def redirect():
         focus = req["queryResult"]["parameters"]["Field"]
         return setEduFocus(focus)
 
-    if "endInteraction" in req["queryResult"]["intent"]: 
+    elif "endInteraction" in req["queryResult"]["intent"]: 
         storeUser()
         return
+
+    #Authorization
+    if intent == "Speech.Exit" or "Interview.Exit":
+        return(branchAuth())
 
     #Speech Sub-App
     if intent == "Speech.Topic":
@@ -91,6 +95,10 @@ def AnalyzeSpeech(content: str):
     sentiment = nlp.getSentiment(content)
     print(content, "....", sentiment)
     output = "Your speech seemed: {}".format(sentiment)
+    if SpeechMetrics != {}:
+        oldSent = SpeechMetrics['sentiment']
+        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+    SpeechMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
 #Inverview Sub-App
@@ -117,10 +125,22 @@ def AnalyzeInterview(transcript: str):
     sentiment = nlp.getSentiment(transcript)
     print(transcript, "....", sentiment)
     output = "Your interview seemed: {}".format(sentiment)
+    if InterviewMetrics != {}:
+        oldSent = InterviewMetrics['sentiment']
+        output += "\nYour sentiment changed by {}%".format(sentiment/oldSent)
+    InterviewMetrics['sentiment'] = sentiment
     return {'fulfillmentText': output}
 
 #Account Creation
+def restoreUser(username):
+    for el in Users:
+        if el['username'] == username:
+            User = el
+            auth = True
+            break
+
 def setUsername(id):
+    auth = True
     User["username"]= id
     print("User.Username was set to: ", id)
 
@@ -135,11 +155,47 @@ def setEduFocus(focus):
 def storeUser():
     if (User["username"] != None) and (User["eduLevel"] != None) and (User["eduFocus"] != None):
         Users.append(User)
+        User = {"username": None,
+                "eduLevel": None,
+                "eduFocus": None}
+        SpeechMetrics = {}
+        InterviewMetrics = {}
+        SpeechTopic = None
+    auth = False
+
+def branchAuth():
+
+    if auth == True:
+        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+                    'speaking, "Recommendations" to get study recommendations, or "Inquiry" to '
+                    'ask Bemo a question')
+        req = request.get_json(force=True)
+        oldContext = req["queryResult"]["outputContexts"]["name"]
+        newContext = oldContext.split('/Dummy')[0] + "Authorized"
+        return {'fulfillmentText': respText,
+                'outputContexts':[{
+                    "name": newContext,
+                    "lifespanCount": 5
+                    }]
+                }
+
+    elif auth == False:
+        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+                    'speaking, or "Inquiry" to ask Bemo a question')
+        req = request.get_json(force=True)
+        oldContext = req["queryResult"]["outputContexts"]["name"]
+        newContext = oldContext.split('/Dummy')[0] + "Anonymous"
+        return {'fulfillmentText': respText,
+                'outputContexts':[{
+                    "name": newContext,
+                    "lifespanCount": 5
+                    }]
+                }
 
 #User Tailored Functions
 
 def recommendContent():
     return None
 
-def recommendContent():
+def tailoredInquiry():
     return None

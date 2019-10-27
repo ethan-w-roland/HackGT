@@ -62,12 +62,12 @@ def redirect():
         storeUser()
         return
 
-    #Authorization
-    if intent == "Speech.Exit" or "Interview.Exit":
+    #Authorization Check
+    if intent == "Speech.Exit" or "Interview.Exit" or "Inquiry.Exit":
         return(branchAuth())
 
     #Speech Sub-App
-    if intent == "Speech.Topic":
+    if intent == "Speech":
         topic = req["queryResult"]["parameters"]["Topic"]
         return SetSpeechTopic(topic)
 
@@ -76,7 +76,7 @@ def redirect():
         return AnalyzeSpeech(content)
 
     #Interview Sub-App
-    elif intent == "Interview.Type":
+    elif intent == "Interview":
         qType = req["queryResult"]["parameters"]["QuestionType"]
         return HandleQuestionType(qType)
     
@@ -151,31 +151,15 @@ def storeUser():
 def branchAuth():
 
     if auth == True:
-        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+        output = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, "Recommendations" to get study recommendations, or "Inquiry" to '
                     'ask Bemo a question')
-        req = request.get_json(force=True)
-        oldContext = req["queryResult"]["outputContexts"]["name"]
-        newContext = oldContext.split('/Dummy')[0] + "Authorized"
-        return {'fulfillmentText': respText,
-                'outputContexts':[{
-                    "name": newContext,
-                    "lifespanCount": 5
-                    }]
-                }
+        return {'fulfillmentText': output}
 
     elif auth == False:
-        respText = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
+        output = ('Exited. Say "Interviews" to practice interviews, "Speech" to practice public '
                     'speaking, or "Inquiry" to ask Bemo a question')
-        req = request.get_json(force=True)
-        oldContext = req["queryResult"]["outputContexts"]["name"]
-        newContext = oldContext.split('/Dummy')[0] + "Anonymous"
-        return {'fulfillmentText': respText,
-                'outputContexts':[{
-                    "name": newContext,
-                    "lifespanCount": 5
-                    }]
-                }
+        return {'fulfillmentText': output}
 
 #User Tailored Functions
 
